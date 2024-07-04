@@ -49,5 +49,3 @@ services:
       - ./data/cert:/var/lib/letsencrypt
     entrypoint: /bin/sh -c 'while ! nc -z app 80; do sleep 1; done; certbot certonly --webroot -w /var/lib/letsencrypt -d www.nekostation.top -d nekostation.top --non-interactive --agree-tos --email lucafang0212@gmail.com --rsa-key-size 2048 --force-renewal;'
 
-volumes:
-  certbot-etc:
