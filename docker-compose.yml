@@ -30,4 +30,17 @@ services:
     volumes:
       - ./data/cert:/etc/nginx/ssl
 
-
+  certbot:
+    image: certbot/dns-namesilo
+    container_name: certbot
+    environment:
+      - NAMESILO_API_KEY=your_namesilo_api_key
+    volumes:
+      - ./data/cert:/etc/letsencrypt
+      - ./data/namesilo.ini:/etc/letsencrypt/namesilo.ini:ro
+    entrypoint: >
+      /bin/sh -c 'trap exit TERM;
+      while :; do
+        certbot certonly --dns-namesilo --dns-namesilo-credentials /etc/letsencrypt/namesilo.ini --email lucafang0212@gmail.com --agree-tos --no-eff-email -d nekostation.top -d www.nekostation.top --force-renewal;
+        sleep 12h & wait $${!};
+      done;'
