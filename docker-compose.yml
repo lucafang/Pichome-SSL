@@ -22,20 +22,21 @@ services:
       - "443:443"
     environment:
       DB_HOST: db
-      DB_NAME: your_database
-      DB_USER: your_user
-      DB_PASSWORD: your_password
+      DB_NAME: pichome
+      DB_USER: pichome
+      DB_PASSWORD: Pichome
     depends_on:
       - db
     volumes:
       - ./data/cert:/etc/nginx/ssl
-      - ./data/certbot:/var/www/certbot # For Certbot webroot validation
+      - ./data/certbot:/var/www/certbot
+    # Ensure Nginx is configured to serve the .well-known/acme-challenge/ path correctly
 
   certbot:
     image: certbot/certbot
     container_name: certbot
     volumes:
-      - ./data/cert:/etc/letsencrypt # Storing certificates
+      - ./data/cert:/etc/letsencrypt
       - ./data/certbot:/var/www/certbot
     entrypoint: >
       /bin/sh -c 'trap exit TERM;
