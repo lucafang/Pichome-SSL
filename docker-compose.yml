@@ -29,18 +29,5 @@ services:
       - db
     volumes:
       - ./data/cert:/etc/nginx/ssl
-      - ./data/certbot:/var/www/certbot
-    # Ensure Nginx is configured to serve the .well-known/acme-challenge/ path correctly
 
-  certbot:
-    image: certbot/certbot
-    container_name: certbot
-    volumes:
-      - ./data/cert:/etc/letsencrypt
-      - ./data/certbot:/var/www/certbot
-    entrypoint: >
-      /bin/sh -c 'trap exit TERM;
-      while :; do
-        certbot certonly --webroot -w /var/www/certbot --email lucafang0212@gmail.com --agree-tos --no-eff-email -d nekostation.top -d www.nekostation.top --force-renewal;
-        sleep 12h & wait $${!};
-      done;'
+
