@@ -31,7 +31,7 @@ services:
       - ./data/cert:/etc/nginx/ssl
 
   certbot:
-    image: certbot/dns-namesilo
+    image: certbot/certbot
     container_name: certbot
     environment:
       NAMESILO_API_KEY: your_namesilo_api_key
