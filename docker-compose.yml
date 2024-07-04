@@ -1,1 +1,45 @@
+version: '3'
 
+services:
+  db:
+    image: mariadb:10.7
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: Chicken0212!
+      MYSQL_DATABASE: pichome
+      MYSQL_USER: pichome
+      MYSQL_PASSWORD: Pichome
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./data/db:/var/lib/mysql
+
+  app:
+    image: oaooa/pichome
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+    environment:
+      DB_HOST: db
+      DB_NAME: your_database
+      DB_USER: your_user
+      DB_PASSWORD: your_password
+    depends_on:
+      - db
+    volumes:
+      - ./data/cert:/etc/nginx/ssl
+      - ./data/certbot:/var/www/certbot # For Certbot webroot validation
+
+  certbot:
+    image: certbot/certbot
+    container_name: certbot
+    volumes:
+      - ./data/cert:/etc/letsencrypt # Storing certificates
+      - ./data/certbot:/var/www/certbot
+    entrypoint: >
+      /bin/sh -c 'trap exit TERM;
+      while :; do
+        certbot certonly --webroot -w /var/www/certbot --email lucafang0212@gmail.com --agree-tos --no-eff-email -d nekostation.top -d www.nekostation.top --force-renewal;
+        sleep 12h & wait $${!};
+      done;'
